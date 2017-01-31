@@ -44,6 +44,7 @@ Item {
     }
 
 
+
     Gradient{
         id:errorTruckGradient
         GradientStop { position: 0; color: errorTruckColorDarker }
@@ -53,7 +54,7 @@ Item {
     }
 
 
-    Gradient{
+   Gradient{
         id:roadBGGradiant
         GradientStop { position: 0.0; color: "#00000000" }
         GradientStop { position: 0.1; color: "#55000000" }
@@ -101,6 +102,7 @@ Item {
                 spring:5
             }
         }
+
     }
 
     Rectangle{
@@ -120,12 +122,12 @@ Item {
 
 
 
-    Rectangle{
+   Rectangle{
         id:stringLine
         width:8
         radius:8
-        border.width:2
-        color:"#FFFFFF"
+        border.width:0
+        color:"transparent" //disable string line perceptually
         anchors.centerIn: parent
         height:(stringRow.truckHeight+stringRow.spacing)*numberOfTrucks + 20
         Behavior on height{
@@ -142,6 +144,7 @@ Item {
     Column{
         id:stringRow
         property int truckHeight:70
+
         anchors.centerIn: stringLine
         Behavior on height{
             SpringAnimation{
@@ -172,7 +175,7 @@ Item {
                     border.color:errorTruckColor
                 }
 
-                Rectangle{
+                Rectangle{     //SY: I guess here myBack means the background
                     id:myBack
                     opacity:1
                     width:47
@@ -236,13 +239,13 @@ Item {
                         source:calculateImagesource()
                         function calculateImagesource(){
                             if(index===myTruckID){
-                                return("Images/PATH/vehEgo.png")
+                               return("Images/PATH/vehEgo.png")
                             }else if(index===0 && udpXDataCACC.CACCState===2){
-                                return("Images/PATH/vehLeader.png")
+                               return("Images/PATH/vehLeader.png")
                             }else{
                                 return("Images/PATH/vehFollower.png")
                             }
-                        }
+                         }
                      }
                     Image{
                         id:badComIcon
