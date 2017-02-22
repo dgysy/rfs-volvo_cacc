@@ -18,25 +18,23 @@ Item{
         width:myWidth
         height:myHeight
         border.width:1
-        radius:120 //SY: the shape of button is round
-
+        radius:120
+        border.color:"#FFFFFF"
         // border.color:buttonColorLighter
         /*gradient:Gradient{
             GradientStop { position: 0; color: buttonColor }
             GradientStop { position: 1; color: buttonColorDarker }
         }*/
-
-        color:"#f7f7f7"
+        color:"transparent"
 
         Text{
             id:buttonTxt
             text:btnText
-            color:"#071e29"
+            color:"#ffffff"
             font.bold: true
             anchors.centerIn: parent
             font.family: "Volvo Sans Pro"
-            font.pixelSize: 60 // SY: original is 40
-            //contentWidth:0
+            font.pixelSize: 70 // original is 40
         }
        /* DropShadow {
             anchors.fill: buttonTxt
@@ -50,12 +48,12 @@ Item{
         }*/
     }
     DropShadow {
-        color: "#aa000000"//"#00aaff"
+        color: "#00aaff"
         anchors.fill: buttonBG2
-        horizontalOffset: 6
-        verticalOffset: 6
-        radius: 3.0
-        //fast: false
+        horizontalOffset: 1
+        verticalOffset: 1
+        radius: 2.0
+        fast: false
         anchors.rightMargin: -6
         samples: 16
         source: buttonBG2
@@ -64,12 +62,10 @@ Item{
     MouseArea{
         anchors.fill:parent
         onPressed:{
-            parent.scale=1.1
-            buttonBG2.color="#ffffff"
+            parent.scale=1.2
         }
         onReleased:{
             parent.scale=1
-            buttonBG2.color="#f7f7f7"
             if(parent.opacity===1){
                 buttonClicked(myGroup,myID)
             }

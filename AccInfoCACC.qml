@@ -119,7 +119,8 @@ Item{
             anchors.horizontalCenterOffset: 1
             anchors.centerIn:parent
             opacity:activeCruise()? 1 : ccEnabladOpacityLevel
-            source:accState > 2 ? "Images/Cruise/ccLanesGrey.png" : "Images/Cruise/ccLanesBlue.png" 
+            source:accState > 2 ? "Images/Cruise/ccLanesGrey.png" : "Images/Cruise/ccLanesBlue.png"
+          //source: "Images/Cruise/ccLanesBlue.png"
 
         }
 
@@ -209,15 +210,17 @@ Item{
             id:ccGap
 
             anchors.horizontalCenter: parent.horizontalCenter
+            //anchors.bottom: ccLanes.bottom
+            //anchors.centerIn:parent
             anchors.verticalCenterOffset: 30
             opacity:activeCruise()? 1 : ccEnabladOpacityLevel
             source: accState>2 ? "Images/Cruise/ccGapGrey.png" : "Images/Cruise/ccGapBlue.png"
-
+            //source:  "Images/Cruise/ccGapBlue.png"
 
             clip:true
             fillMode: Image.Pad
-            verticalAlignment: Image.AlignTop // SY: the alignment is changed from Buttom to Top
-            property var clipping:[5,17,33,50,75] //[25,42,58,70,80]-> 25, 17, 16, 12, 10
+            verticalAlignment: Image.AlignBottom
+            property var clipping:[25,42,58,70,80]
             y: 40
             width:150
             height:accState>2 ? clipping[udpXDataCACC.ACCTimeGap] : clipping[adjustedCACCGap]
@@ -306,6 +309,8 @@ Item{
             anchors.bottom: ccGap.top
             anchors.bottomMargin: 28
             source:accState > 2 ? "Images/Cruise/ccTargetGrey.png" :"Images/Cruise/ccTargetBlueTruck.png"
+            //source:"Images/Cruise/ccTargetBlueTruck.png"
+
             visible:targetCruise()
             opacity:(activeCruise()? 1 : ccEnabladOpacityLevel)
         }
@@ -388,15 +393,15 @@ Item{
         Item{
 
             id:accStateTextHolder
-            y: 168
+            y: 152
             width:304
             height:42
-            anchors.horizontalCenterOffset: 1
+            anchors.horizontalCenterOffset: 5
             // anchors.top:ccLanes.bottom
             anchors.topMargin:100
             anchors.horizontalCenter: parent.horizontalCenter
 
-            Text{                                 //SY: change CACC below the icon here
+            Text{                                 //change CACC below the icon here
                 id:accStateText
                 font.family: fontBold
                 font.bold:true
@@ -408,7 +413,7 @@ Item{
                 horizontalAlignment: Text.AlignHCenter
                 anchors.centerIn: parent
                 opacity: activeCruise()? 1 : ccEnabladOpacityLevel
-                color:accState>2 ? fontInstrumentColor :"#5ea6f5"  // "#007dc8"
+                color:accState>2 ? fontInstrumentColor : "#007dc8"
             }
 
         }

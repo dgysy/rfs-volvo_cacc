@@ -17,7 +17,7 @@ Item{
         width:myWidth
         height:myHeight
         border.width:1
-        radius:10
+        radius:6
         border.color:buttonColorLighter
         gradient:Gradient{
             GradientStop { position: 0; color: buttonColor }
@@ -26,19 +26,14 @@ Item{
 
         Text{
             id:buttonTxt
-            width: 170
-            height: 78
             text:btnText
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
             color:"#ffffff"
-            //font.bold: true
+            font.bold: true
             anchors.centerIn: parent
             font.family: "Volvo Sans Pro"
-            font.pixelSize: 60 // SY: the size of button originally is 40
+            font.pixelSize: 65 // original is 40
         }
-
-        /* DropShadow {
+       /* DropShadow {
             anchors.fill: buttonTxt
             horizontalOffset: 3
             verticalOffset: 3
@@ -50,10 +45,10 @@ Item{
         }*/
     }
     DropShadow {
-        color: "#aa000000"//"#00aaff"
+        color: "#00aaff"
         anchors.fill: buttonBG
-        horizontalOffset: 6
-        verticalOffset: 6
+        horizontalOffset: 1
+        verticalOffset: 1
         radius: 2.0
         fast: false
         anchors.rightMargin: -6
@@ -62,10 +57,6 @@ Item{
     }
 
     MouseArea{
-        anchors.rightMargin: 10
-        anchors.bottomMargin: 8
-        anchors.leftMargin: -5
-        anchors.topMargin: 0
         anchors.fill:parent
         onPressed:{
 
@@ -73,20 +64,20 @@ Item{
             cAccBtn.scale=1.1
             accBtn.scale=1.0
             cAccBtn.opacity=1.0
-            accBtn.opacity=0.3
+            accBtn.opacity=0.5
             }
 
             if(myID==0){
                 cAccBtn.scale=1.0
                 accBtn.scale=1.1
-                cAccBtn.opacity=0.3
+                cAccBtn.opacity=0.5
                 accBtn.opacity=1.0
 
             }
         }
         onReleased:{
             //parent.scale=1
-            if(parent.opacity===1){
+            if(parent.opacity===1){  // Why we need to use an 'if' command here?
                 buttonClicked(myGroup,myID)
             }
           }

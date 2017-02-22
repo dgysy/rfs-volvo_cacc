@@ -7,11 +7,11 @@ Item {
     width:130
     height:(stringRow.truckHeight+stringRow.spacing)*numberOfTrucks + 80
 
-  /*  property var stringData:[
+    property var stringData:[
         {"ID":0,"Type":0,"Destination":"","Intruder":false,"isTemporaryLeader":false,"isBraking":false},
         {"ID":1,"Type":0,"Destination":"","Intruder":false,"isTemporaryLeader":false,"isBraking":false},
         {"ID":2,"Type":0,"Destination":"","Intruder":false,"isTemporaryLeader":false,"isBraking":false}
-    ]*/
+    ]
 
 
     function recreateStringData(newData){
@@ -31,11 +31,11 @@ Item {
             }
             temp.IsBraking=newData[i][2]
 
-            /*if(newData[i][3]>0){
+            if(newData[i][3]>0){
                 temp.isTemporaryLeader=true
             }else{
                 temp.isTemporaryLeader=false
-            }*/
+            }
 
             temp.Destination=""
             items.push(temp)
@@ -144,9 +144,6 @@ Item {
     Column{
         id:stringRow
         property int truckHeight:70
-       // width: 114
-       // height: 184 //the width and height will change the position
-                      // relative to the left and right lines
 
         anchors.centerIn: stringLine
         Behavior on height{
@@ -189,19 +186,21 @@ Item {
                     color:calculateMyColor()
 
                     function calculateMyColor(){
-                        if(index===0){ // the tuck is in a leader postion
+                        if(index===0){
                             if(index===myTruckID){
-                                if(udpXDataCACC.CACCState===2){ // here means when CACC is active
-                                    return("#008cff") // SY:the leading truck is always blue
-                                }/*else{
+                                if(udpXDataCACC.CACCState===2){
+                                    return("#008cff")
+                                }else{
                                     return("#31FF06")
-                                }*/
+                                }
                             }else{
                                 return("#00000000")
                             }
-                        }/*else if (index===myTruckID){
-                            return("#31FF06")  // SY: remove the redundant color green
-                        }*/else{
+                        }else if(modelData.isTemporaryLeader){
+                            return ("#008cff")
+                        }else if (index===myTruckID){
+                            return("#31FF06")
+                        }else{
                             return("#00000000")
                         }
                     }
@@ -237,7 +236,7 @@ Item {
                     Image{
                         id:vehImage
                         anchors.centerIn: parent
-                       source:calculateImagesource()
+                        source:calculateImagesource()
                         function calculateImagesource(){
                             if(index===myTruckID){
                                return("Images/PATH/vehEgo.png")
