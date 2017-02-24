@@ -11,58 +11,84 @@ Item{
     height:myHeight+10
     width:myWidth+10
 
+
     Rectangle{
         id:buttonBG
         width:myWidth
         height:myHeight
-        border.width:1
-        radius:6
-        border.color:buttonColorLighter
-        gradient:Gradient{
-            GradientStop { position: 0; color: buttonColor }
-            GradientStop { position: 1; color: buttonColorDarker }
-        }
+        border.width:2
+        border.color:"#FFFFFF"
+        radius:10
+        //border.color:buttonColorLighter
+        color:"transparent"  // SY2: the color of the button was transparent now
 
         Text{
             id:buttonTxt
+            x: 58
+            y: 13
+            width: 118
+            height: 49
+            //width: 170
+           // height: 80
             text:btnText
+            fontSizeMode: Text.FixedSize
+            verticalAlignment: Text.AlignVCenter
+            anchors.verticalCenterOffset: 6
+            anchors.horizontalCenterOffset: 0
+            horizontalAlignment: Text.AlignHCenter
             color:"#FFFFFF"
-            font.bold: true
+            //font.bold: true
             anchors.centerIn: parent
             font.family: "Volvo Sans Pro"
-            font.pixelSize: 40
+            font.pixelSize: 50 // SY: the size of button originally is 40
         }
-        DropShadow {
-            anchors.fill: buttonTxt
-            horizontalOffset: 3
-            verticalOffset: 3
-            radius: 8.0
-            samples: 16
-            color: "#80000000"
-            source: buttonTxt
-        }
-    }
-    DropShadow {
-        anchors.fill: buttonBG
-        horizontalOffset: 3
-        verticalOffset: 3
-        radius: 8.0
-        samples: 16
-        color: "#80000000"
-        source: buttonBG
+
     }
 
-    MouseArea{
+   /* DropShadow {
+        color: "#aa000000"//"#00aaff"
+        anchors.fill: buttonBG
+        horizontalOffset: 6
+        verticalOffset: 6
+        radius: 2.0
+        fast: false
+        anchors.rightMargin: -6
+        samples: 16
+        source: buttonBG
+    }*/
+
+    MouseArea{ // SY4: margins were changed
+        anchors.rightMargin: 2
+        anchors.bottomMargin: 2
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
         anchors.fill:parent
-        onPressed:{
-            parent.scale=1.1
+        onPressed:{ // pressed effect is changed
+
+            if (myID==1){
+            cAccBtn.scale=1.1
+            accBtn.scale=1.0
+            cAccBtn.opacity=1.0
+            accBtn.opacity=0.3
+
+            }
+
+            if(myID==0){
+                cAccBtn.scale=1.0
+                accBtn.scale=1.1
+                cAccBtn.opacity=0.3
+                accBtn.opacity=1.0
+
+            }
         }
         onReleased:{
-            parent.scale=1
+            //parent.scale=1
             if(parent.opacity===1){
                 buttonClicked(myGroup,myID)
             }
-        }
+          }
+
+
     }
 
 }

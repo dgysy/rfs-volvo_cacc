@@ -20,7 +20,7 @@ ApplicationWindow {
     property string otherTruckColorDarker:"#a3f34d"
     property string errorTruckColorDarker:"#f34d4d"
 
-    property string buttonColor:"#082a38"//0e3d51
+    property string buttonColor:"#3292ba"   //0e3d51 #082a38
     property string buttonColorDarker:"#2a7185"
     property string buttonColorLighter:"2a7185"
 
@@ -29,7 +29,7 @@ ApplicationWindow {
     property string buttonActiveColorLighter:"08FF2a"
 
 
-    property string popupColor:"#082a38"//0e3d51
+    property string popupColor:"#082a38"  //0e3d51
     property string popupColorDarker:"#2a7185"
     property string popupColorLighter:"2a7185"
 
@@ -52,7 +52,7 @@ ApplicationWindow {
     property bool isLeader:udpSeret.position===0
     property int platooningState:udpSeret.platooningState
     property int popupID:udpSeret.popup
-    property int numberOfTrucks:1
+    property int numberOfTrucks:3   // SY: The default is 1
     property string exitDistance:(udpSeret.exitDistance/10.0).toFixed(1)
     property int myTruckID:udpSeret.position
     property var stringArray:udpSeret.vehicleArray
@@ -143,10 +143,6 @@ ApplicationWindow {
 
         console.log(numberOfTrucks)
         console.log(stringArray)
-//        console.log(udpXDataCACC.CACCState)
-//        console.log(udpXDataCACC.ACCTimeGap)
-//        console.log(udpXDataCACC.CACCTimeGap)
-
         truckString.recreateStringData(stringArray)
     }
     onUserPopupIDChanged: {
@@ -191,7 +187,7 @@ ApplicationWindow {
     }
 
     function buttonClicked(g,i){
-        console.log("Group: "+g+", ID: "+i)
+        console.log("Group: "+g+", ID: "+i) // print debugging information to the console
         if(g===0){
             //USER ACTION - trigg popup
             if(i===0){
@@ -214,6 +210,7 @@ ApplicationWindow {
             buttonStatus=i+5
             console.log(buttonStatus)
             buttonPressTimer.restart()
+
         }
 
     }
@@ -228,8 +225,17 @@ ApplicationWindow {
 
     }
 
-    width:isAndroid ? 2048 : 1024// 2560 : 1280
-    height:isAndroid ? 1536 : 768//1600 : 800
+
+    property alias timegapPlus: timegapPlus
+    property alias timegapMinus: timegapMinus
+    property alias truckString: truckString
+    property alias cAccBtn: cAccBtn
+   // property alias popupMouseBlocker: popupMouseBlocker
+    property alias timegapButtonColumn: timegapButtonColumn
+    property alias buttonRow: buttonRow
+
+    width:isAndroid ?2048:1024//1600 : 800
+    height:isAndroid ?1536:768
     visibility:isAndroid ? 5 : 2
     visible: true
 
@@ -238,31 +244,37 @@ ApplicationWindow {
 
     Item{
         id:scaleHolder
-        scale:isAndroid ? 2 : 1
-        width:1024
-        height:768
-        anchors.centerIn: parent
+                scale:isAndroid ? 2 : 1
+                width:1024
+                height:768
+                anchors.verticalCenterOffset: -6
+                anchors.horizontalCenterOffset: 0
+                anchors.centerIn: parent
 
         Rectangle{
             id:mainBackground
             color:"#000000"
+            anchors.rightMargin: 0
+            anchors.bottomMargin: -12
+            anchors.leftMargin: 1
+            anchors.topMargin: 0
             anchors.fill:parent
             Image{
-                id:bgSky
-                source:"Images/backgroundSky.png"
-                opacity:0.28
-            }
-            Image{
                 id:bgAbstract
+                x: 0
+                y: 5
+                width: 1383
+                height: 831
                 source:"Images/backgroundAbstract.png"
                 opacity:0.46
             }
         }
 
+/*
         WaitingScreen{
             id:waitingHolder
-
         }
+*/
 
         Row{
             id:buttonRow
@@ -273,21 +285,20 @@ ApplicationWindow {
             anchors.left:parent.left
             anchors.leftMargin: 20
             width:240
-            ButtonStandard{
-                opacity:udpXDataCACC.CACCState ===2 ? 1 : 0.2
-                id:joinBtn
-                myID:isLeader ? 0 : 1
-                myGroup:0
-                btnText: isLeader ? "DISSOLVE" : "LEAVE"
-            }
+
         }
+
+
 
         TruckString{
            id:truckString
-           visible:platooningState>1
+           width: 156
+           height: 580
+           anchors.horizontalCenterOffset: -6
+           anchors.verticalCenterOffset: 0
            anchors.horizontalCenter: buttonRow.horizontalCenter
            anchors.verticalCenter: parent.verticalCenter
-           anchors.verticalCenterOffset: -70
+           visible:platooningState>1
         }
 
         Rectangle{
@@ -295,67 +306,141 @@ ApplicationWindow {
            height:parent.height
            width:3
            anchors.left:buttonRow.right
-           anchors.leftMargin: 20
-
+           anchors.leftMargin: 6
            visible:platooningState>1
            color:"#0f4057"
+
         }
-        Item{
+
+
+
+
+  Item{
             id:accInfoHolder
             anchors.centerIn: parent
             anchors.horizontalCenterOffset: buttonRow.width/2+20
-            visible:platooningState>1 && udpXDataCACC.CACCState>0
+            visible: platooningState>1 && udpXDataCACC.CACCState>0
+
             AccInfoCACC{
                 id:accInfo
-                anchors.centerIn: parent
-                anchors.verticalCenterOffset: -100
+                width: 551//398  // which is to control the blue window
+                height: 385//102 // which is to control the blue window
+                anchors.verticalCenterOffset: -62
+                anchors.horizontalCenterOffset: 52
+                scale: 1
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+
             }
+
+
             Row{
                 id:accButtonRow
-                spacing:20
+                x: -300
+                y: 194
+                //width: 524
+                //height: 80
+                anchors.horizontalCenterOffset: 52
+                layoutDirection: Qt.LeftToRight
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top:accInfo.bottom
-                anchors.topMargin: 20
+                spacing:75
+
                 visible:true
-                ButtonStandard{
-                    id:accBtn
-                    myID:0
-                    myGroup:2
-                    btnText: "ACC"
-                    myWidth: 180
-                    //myState:0
-                }
+
                 ButtonStandard{
                     id:cAccBtn
+                    scale:udpXDataCACC.CACCState===2? 1.1 : 1  // set the initial size of the button
+                    opacity:udpXDataCACC.CACCState===2? 1 : 0.3  // set the initial opacity of the button
+                   // width: 225
+                    //height: 80
+                    anchors.margins: 2
+
                     myID:1
                     myGroup:2
                     btnText: "CACC"
-                    myWidth: 180
+                    //myHeight: 80
+                    myWidth: 225// SY: Change the parameters from 180 to 225
                     //myState:1
                 }
-            }
-            Row{
-                id:timegapButtonRow
-                spacing:20
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top:accButtonRow.bottom
-                anchors.topMargin: 20
-                visible:true
+
                 ButtonStandard{
+                    id:accBtn
+                    scale:udpXDataCACC.CACCState===4? 1.1 : 1  // set the initial size of the button
+                    opacity:udpXDataCACC.CACCState===4? 1 : 0.3  // set the initial opacity of the button
+                    //width: 225
+                    //height: 80
+                    anchors.margins: 2
+
+
+                    myID:0
+                    myGroup:2
+                    btnText: "ACC"
+                    //myHeight: 80
+                    myWidth: 225  // SY: Change the parameters from 180 to 225
+                    //myState:0
+                }
+
+            }
+
+            Column{
+                id:timegapButtonColumn
+                x: -200
+                y: 300
+                width: 117
+                height: 316
+                anchors.verticalCenterOffset: -56
+                anchors.horizontalCenterOffset: -228
+                smooth: true
+                enabled: true
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                spacing:80
+                visible:true
+
+                ButtonStandard2{
                     id:timegapMinus
+                    width: 120
+                    height: 120
+                    scale: 1
+                    //btnText: "⇧" // SY: this "⬆" is backup
                     myID:2
                     myGroup:2
-                    btnText: "-"
-                    myWidth: 80
+                    myWidth: 120 // SY: change the parameters from 80 to 110
+                    myHeight: 120
+
+                    Image{  //SY2: The content of the button was changed to an image
+                        id:minusGapArrow
+                        sourceSize.height: 70
+                        sourceSize.width: 50
+                        fillMode: Image.Stretch
+                        anchors.centerIn: parent
+                        source:"Images/Button/minusGap.png"
+                    }
 
                 }
-                ButtonStandard{
+
+                ButtonStandard2{
                     id:timegapPlus
+                    width: 120
+                    height: 120
+                    scale: 1
+
                     myID:3
                     myGroup:2
-                    btnText: "+"
-                    myWidth: 80
+                    //btnText:"⇩" //SY: this "⬇" is backup
+                    myWidth: 120 // SY: change the button size from 80 to 110
+                    myHeight: 120
+
+
+                    Image{   //SY2: The content of the button was changed to an image
+                        id:addGapArrow
+                        anchors.centerIn: parent
+                        visible:true
+                        source:"Images/Button/addGap.png"
+                        }
+
                 }
+
             }
         }
 
@@ -387,6 +472,7 @@ ApplicationWindow {
                 horizontalAlignment: Text.AlignRight
                 visible:udpVehicle.accIcon===1
             }
+
             Image{
                 id:setSpeedPopupIcon
                 y: 74
@@ -402,19 +488,28 @@ ApplicationWindow {
 
 
 
-    FastBlur {
+  /*  FastBlur {
         id:popupBlur
         scale:isAndroid ? 2 : 1
         anchors.fill: scaleHolder
         source: scaleHolder
-        radius: 32//reminderPopup.opacity*32
+        radius: 32
+        anchors.bottomMargin: 12
+        anchors.leftMargin: 8
+        anchors.topMargin: -12
+        anchors.rightMargin: -8//reminderPopup.opacity*32
         opacity:popupMouseBlocker.opacity*2.5
         visible:popupMouseBlocker.visible
         cached:visible ? true : false
     }
 
-    Item{
+  Item{
         id:popupHolder
+        visible: false
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
         anchors.fill:parent
         scale:isAndroid ? 2 : 1
 
@@ -478,6 +573,6 @@ ApplicationWindow {
             scale:popupID>0 ? 1:1.1
         }
     }
-
+*/
 }
 

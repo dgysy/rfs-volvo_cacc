@@ -7,12 +7,12 @@ Item {
     width:130
     height:(stringRow.truckHeight+stringRow.spacing)*numberOfTrucks + 80
 
+  // This is the code we need to control the car icon.
     property var stringData:[
-        {"ID":0,"Type":0,"Destination":"","Intruder":false,"isTemporaryLeader":false,"isBraking":false},
-        {"ID":1,"Type":0,"Destination":"","Intruder":false,"isTemporaryLeader":false,"isBraking":false},
-        {"ID":2,"Type":0,"Destination":"","Intruder":false,"isTemporaryLeader":false,"isBraking":false}
-    ]
-
+           {"ID":0,"Type":0,"Destination":"","Intruder":false,"isTemporaryLeader":false,"isBraking":false},
+           {"ID":1,"Type":0,"Destination":"","Intruder":false,"isTemporaryLeader":false,"isBraking":false},
+           {"ID":2,"Type":0,"Destination":"","Intruder":false,"isTemporaryLeader":false,"isBraking":false}
+       ]
 
     function recreateStringData(newData){
         var items=[]
@@ -31,11 +31,11 @@ Item {
             }
             temp.IsBraking=newData[i][2]
 
-            if(newData[i][3]>0){
+            /*if(newData[i][3]>0){
                 temp.isTemporaryLeader=true
             }else{
                 temp.isTemporaryLeader=false
-            }
+            }*/
 
             temp.Destination=""
             items.push(temp)
@@ -127,7 +127,7 @@ Item {
         width:8
         radius:8
         border.width:0
-        color:"transparent" //disable string line perceptually
+        color:"transparent" // udpXDataCACC.CACCState===2? "#FFFFFF" :"transparent"  if CACC on, show white line; if off, disable line
         anchors.centerIn: parent
         height:(stringRow.truckHeight+stringRow.spacing)*numberOfTrucks + 20
         Behavior on height{
@@ -144,6 +144,9 @@ Item {
     Column{
         id:stringRow
         property int truckHeight:70
+       // width: 114
+       // height: 184 //the width and height will change the position
+                      // relative to the left and right lines
 
         anchors.centerIn: stringLine
         Behavior on height{
@@ -153,7 +156,8 @@ Item {
             }
         }
 
-        spacing: 80
+        spacing: 120 //SY3: the space between trucks were changed
+
         Repeater{
             model:stringData
             Item{
@@ -183,24 +187,23 @@ Item {
                     height:113
                     anchors.centerIn: parent
                     visible:index<numberOfTrucks
+
                     color:calculateMyColor()
 
                     function calculateMyColor(){
-                        if(index===0){
+                        if(index===0){ // the tuck is in a leader postion
                             if(index===myTruckID){
-                                if(udpXDataCACC.CACCState===2){
-                                    return("#008cff")
-                                }else{
+                                if(udpXDataCACC.CACCState===2){ // here means when CACC is active
+                                    return("#5ea6f5") // SY:the leading truck is always blue "#008cff"
+                                }/*else{
                                     return("#31FF06")
-                                }
+                                }*/
                             }else{
                                 return("#00000000")
                             }
-                        }else if(modelData.isTemporaryLeader){
-                            return ("#008cff")
-                        }else if (index===myTruckID){
-                            return("#31FF06")
-                        }else{
+                        }/*else if (index===myTruckID){
+                            return("#31FF06")  // SY: remove the redundant color green
+                        }*/else{
                             return("#00000000")
                         }
                     }
@@ -216,13 +219,12 @@ Item {
 
                     Rectangle{
                         id:brakingColor
-                        width:47
+                        width:65//47 SY3: the width was changed
                         radius:8
-                        height:113
+                        height:160//113 SY3: the height was changed
                         anchors.centerIn: parent
                         visible:modelData.IsBraking>0
                         color:modelData.IsBraking=== 2 ? "#FF0000" : "#FF0000"
-
                         Rectangle{
                             id:brakingColorEnd
                             width:47
@@ -236,8 +238,13 @@ Item {
                     Image{
                         id:vehImage
                         anchors.centerIn: parent
-                        source:calculateImagesource()
-                        function calculateImagesource(){
+                        source:"Images/PATH/vehLeader.png"
+                        scale: 1.4 // SY:  enlarge the truck icon
+
+                       // source:calculateImagesource()
+
+                        // My Turck ID is 0 (leading truck), 1 (following), 2(following)
+                       /* function calculateImagesource(){
                             if(index===myTruckID){
                                return("Images/PATH/vehEgo.png")
                             }else if(index===0 && udpXDataCACC.CACCState===2){
@@ -245,14 +252,27 @@ Item {
                             }else{
                                 return("Images/PATH/vehFollower.png")
                             }
-                         }
-                     }
+                         }*/
+                    }
+
+
+                    // SY3: A pair of Green Triangles to indicate the truck where driver at.
+                    Image{
+                         id:dringTruck
+                        anchors.centerIn: parent
+                        source:"Images/PATH/greenTri2.png"
+                        visible:modelData.ID===myTruckID // SY3: what does myTruckID mean?
+                        scale: 1.4
+                        }
+
+
                     Image{
                         id:badComIcon
                         anchors.centerIn: parent
-                        anchors.verticalCenterOffset: 30
+                        anchors.verticalCenterOffset: 10// default is 30
                         source:"Images/PATH/badCom.png"
-                        visible:modelData.Type===2
+                        scale:1.5
+                        visible:modelData.Type===2 // 2=truck with communication error
                     }
 
                 }
